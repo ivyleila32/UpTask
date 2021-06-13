@@ -1,122 +1,142 @@
-const Proyectos = require('../models/Proyectos');
+const Proyectos = require("../models/Proyectos");
+const Tareas = require('../models/Tareas');
 
+exports.proyectoHome = async (req, res) => {
+  const proyectos = await Proyectos.findAll();
+  res.render("index", {
+    nombrePagina: "Proyectos",
+    proyectos,
+  });
+};
 
-exports.proyectoHome = async(req, res) => {
-    const proyectos = await Proyectos.findAll(); 
-    res.render('index', {
-      nombrePagina :'Proyectos',
-      proyectos
-    });
-}
+exports.formularioProyecto = async (req, res) => {
+  const proyectos = await Proyectos.findAll();
+  res.render("nuevoProyecto", {
+    nombrePagina: "Nuevo Proyecto",
+    proyectos,
+  });
+};
 
-exports.formularioProyecto = async (req,res) => {
-    const proyectos = await Proyectos.findAll();
-    res.render('nuevoProyecto',{
-      nombrePagina: 'Nuevo Proyecto',
-      proyectos,
-    });
-}
-
-
-exports.nosotros = (req,res) => {
-    res.send('nosotros');
-}
+exports.nosotros = (req, res) => {
+  res.send("nosotros");
+};
 
 exports.nuevoProyecto = async (req, res) => {
-    const proyectos = await Proyectos.findAll();
-    //enviar lo que el usuario escriba 
-    //console.log(req.body);
+  const proyectos = await Proyectos.findAll();
+  //enviar lo que el usuario escriba
+  //console.log(req.body);
 
-    //vaidar input 
-    const {nombre} = req.body;
+  //vaidar input
+  const { nombre } = req.body;
 
-    let errores = [];
+  let errores = [];
 
-    if(!nombre) {
-      errores.push({'texto': 'Agrega un Nombre al Proyecto'}) 
-    }
-  
+  if (!nombre) {
+    errores.push({ texto: "Agrega un Nombre al Proyecto" });
+  }
 
-    // errrores
-    if (errores.length > 0 ){
-        res.render('nuevoProyecto',{
-          nombrePagina : 'Nuevo Proyecto',
-          errores,
-          proyectos
-        })
-    } else {
-      // Si no hay errores
-      //  puedo insertar en la base de datos
-      
-      await Proyectos.create({nombre});
-      res.redirect('/');
-    }
-}
-exports.proyectoPorUrl = async(req,res,next) => {
-    const proyectosPromise = Proyectos.findAll();
-    const proyectoPromise =  Proyectos.findOne({
-        where: {
-          url: req.params.url
-
-        }
+  // errrores
+  if (errores.length > 0) {
+    res.render("nuevoProyecto", {
+      nombrePagina: "Nuevo Proyecto",
+      errores,
+      proyectos,
     });
-    const [proyectos, proyecto] = await Promise.all([proyectosPromise, proyectoPromise]);
-    if (!proyecto) return next();
+  } else {
+    // Si no hay errores
+    //  puedo insertar en la base de datos
 
-    res.render('tareas', {
-      nombrePagina : 'tareas del proyecto',
-      proyecto,
-      proyectos
-    })
+    await Proyectos.create({ nombre });
+    res.redirect("/");
+  }
+};
 
-}
-exports.formularioEditar = async(req, res) => {
-    const proyectosPromise = Proyectos.findAll();
-    const proyectoPromise =  Proyectos.findOne({
-        where: {
-          id: req.params.id
+exports.proyectoPorUrl = async (req, res, next) => {
+  const proyectosPromise = Proyectos.findAll();
+  const proyectoPromise = Proyectos.findOne({
+    where: {
+      url: req.params.url,
+    },
+  });
+  const [proyectos, proyecto] = await Promise.all([
+    proyectosPromise,
+    proyectoPromise,
+  ]);
+  const tareas = await Tareas.findAll({
+    where: {
+      proyectoId : proyecto.id
+    }
+    
+  });
+  console.log(tareas);
+  if (!proyecto) return next();
 
-        }
-    });
-    const [proyectos, proyecto] = await Promise.all([proyectosPromise, proyectoPromise]);
+  res.render("tareas", {
+    nombrePagina: "tareas del proyecto",
+    proyecto,
+    proyectos,
+    tareas,
+  });
+};
 
-    res.render('nuevoProyecto', {
-        nombrePagina : 'Editar Proyecto',
-        proyectos,
-        proyecto
-    })
-}
+exports.formularioEditar = async (req, res) => {
+  const proyectosPromise = Proyectos.findAll();
+  const proyectoPromise = Proyectos.findOne({
+    where: {
+      id: req.params.id,
+    },
+  });
+  const [proyectos, proyecto] = await Promise.all([
+    proyectosPromise,
+    proyectoPromise,
+  ]);
+
+  res.render("nuevoProyecto", {
+    nombrePagina: "Editar Proyecto",
+    proyectos,
+    proyecto,
+  });
+};
 
 exports.actualizarProyecto = async (req, res) => {
-    const proyectos = await Proyectos.findAll();
-    //enviar lo que el usuario escriba 
-    //console.log(req.body);
+  const proyectos = await Proyectos.findAll();
+  //enviar lo que el usuario escriba
+  //console.log(req.body);
 
-    //vaidar input 
-    const {nombre} = req.body;
+  //vaidar input
+  const { nombre } = req.body;
 
-    let errores = [];
+  let errores = [];
 
-    if(!nombre) {
-      errores.push({'texto': 'Agrega un Nombre al Proyecto'}) 
-    }
- 
+  if (!nombre) {
+    errores.push({ texto: "Agrega un Nombre al Proyecto" });
+  }
 
-    // errrores
-    if (errores.length > 0 ){
-        res.render('nuevoProyecto',{
-          nombrePagina : 'Nuevo Proyecto',
-          errores,
-          proyectos
-        })
-    } else {
-      // Si no hay errores
-      //  puedo insertar en la base de datos
-      
-      await Proyectos.update(
-        {nombre: nombre},
-        {where: {id: req.params.id}}
-        );
-      res.redirect('/');
-    }
-}
+  // errrores
+  if (errores.length > 0) {
+    res.render("nuevoProyecto", {
+      nombrePagina: "Nuevo Proyecto",
+      errores,
+      proyectos,
+    });
+  } else {
+    // Si no hay errores
+    //  puedo insertar en la base de datos
+
+    await Proyectos.update(
+      { nombre: nombre },
+      { where: { id: req.params.id } }
+    );
+    res.redirect("/");
+  }
+};
+
+exports.eliminarProyecto = async (req, res, next) => {
+  //console.log(req.params);
+  const { urlProyecto } = req.query;
+  const resultado = await Proyectos.destroy({ where: { url: urlProyecto } });
+  if (!resultado) {
+    return next();
+  }
+  res.status(200).send("proyecto eliminado correctamente");
+};

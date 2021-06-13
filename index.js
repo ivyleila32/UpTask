@@ -11,8 +11,10 @@ const helpers = require('./helpers');
 // conectamos a la bd 
 const db = require('./config/db');
 
+
 // importante importar el modelo
-require('./models/proyectos');
+require('./models/Proyectos');
+require('./models/Tareas');
 
 db.sync()
     .then(()=> console.log('conectado al servidor'))
