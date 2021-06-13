@@ -23,6 +23,10 @@ module.exports = function () {
     proyectoController.actualizarProyecto
   );
   router.delete("/proyectos/:url", proyectoController.eliminarProyecto);
+
+  // Tareas
   router.post('/proyectos/:url', tareasController.agregarTarea);
+  router.patch('/tareas/:id', tareasController.cambiarEstadoTarea);
+
   return router;
 };
