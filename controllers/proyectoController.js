@@ -139,4 +139,6 @@ exports.eliminarProyecto = async (req, res, next) => {
     return next();
   }
   res.status(200).send("proyecto eliminado correctamente");
-};
+}
+
+
