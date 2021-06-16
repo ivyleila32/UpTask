@@ -35,6 +35,8 @@
     "nodemailer": "^6.6.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.4",
     "pug": "^3.0.2",
     "sequelize": "^6.6.2",
     "shortid": "^2.2.16",
