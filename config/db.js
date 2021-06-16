@@ -1,7 +1,12 @@
 const Sequelize = require ('sequelize');
 require('dotenv').config({path: 'variables.env' })
 const db = new Sequelize (process.env.DATABASE_URL, {
-    ssl: true,
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    },
     define: {
         timestamps: false
     },
