@@ -69,12 +69,12 @@ module.exports = function () {
   router.get("/iniciar-sesion", usuariosController.formIniciarSesion);
   router.post("/iniciar-sesion", authController.autenticarUsuario);
 
-  router.get('cerrar-sesion', authController.cerrarSesion);
+  router.get('/cerrar-sesion', authController.cerrarSesion);
   
   router.get('/reestablecer', usuariosController.formReestablecerPassword);
-  router.post('/rrestablecer',authController.enviarToken);
-  router.get('/reestabecer/:token',authController.validarToken);
-  router.post('/reestablecer/:token',authController.actualizarPassword);
+  router.post('/reestablecer', authController.enviarToken);
+  router.get('/reestablecer/:token', authController.validarToken);
+  router.post('/reestablecer/:token', authController.actualizarPassword);
 
 
   

@@ -30,7 +30,7 @@ exports.usuarioAutenticado = (req, res, next) => {
 exports.cerrarSesion = (req, res) => {
     req.session.destroy(() => {
         res.redirect('/iniciar-sesion'); 
-    })
+    });
 }
 
 // genera un token si el usuario es valido
